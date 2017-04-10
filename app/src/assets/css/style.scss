@@ -1,0 +1,23 @@
+.container{
+  width: 100vw;
+  height: 100vh;
+  background: #FFCCCC;
+  text-align: center;
+}
+.toast{
+  position: fixed;
+  width: 20%;
+  min-width: 200px;
+  height: 60px;
+  background: #666;
+  opacity: 0;
+  border-radius: 5px;
+  top: 0;
+  left: 40px;
+  right: 40px;
+  margin: auto;
+  color: #fff;
+  text-align: center;
+  line-height: 60px;
+  transition: 1s;
+}
