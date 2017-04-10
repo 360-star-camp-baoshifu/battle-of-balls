@@ -12,5 +12,9 @@
     "socket.io"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.2.0",
+    "socket.io": "^1.7.3"
+  }
 }
