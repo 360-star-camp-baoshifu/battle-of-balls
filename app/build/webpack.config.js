@@ -9,7 +9,7 @@ const SRC_PATH = path.resolve(__dirname, '../src');
 const DIST_PATH = path.resolve(__dirname, '../dist');
 
 module.exports = {
-    entry: './src/main.js',
+    entry: './app/src/main.js',
     output: {
         path: DIST_PATH,
         publicPath: '/',
@@ -48,7 +48,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Demo',
             filename: './index.html', // 相对于output.path的路径
-            template: './src/index.html',
+            template: './app/src/index.html',
             inject: 'body',
             minify: {
                 removeComments: true
