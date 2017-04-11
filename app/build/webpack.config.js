@@ -1,20 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const autoprefixer = require('autoprefixer');
-const WebpackMd5Hash = require('webpack-md5-hash');
 const ROOT_PATH = path.resolve(__dirname, '../');
 const SRC_PATH = path.resolve(__dirname, '../src');
 const DIST_PATH = path.resolve(__dirname, '../dist');
-const envConfig = require('../config/index')
+const envConfig = require('../config/index');
 
 module.exports = {
     entry: './app/src/main.js',
     output: {
         path: DIST_PATH,
-        publicPath: '/',
-        filename: 'main.js'
+        publicPath: '/'
     },
     module: {
         rules: [{
@@ -23,31 +19,13 @@ module.exports = {
             exclude: /node_modules/
         }, {
             test: /\.(png|jpg|gif)$/,
-            loader: 'url-loader?limit=25000&name=images/[name].[ext]'
-        }, {
-            test: /\.s[a|c]ss$/,
-            exclude: /node_modules/,
-            loader: ExtractTextPlugin.extract({
-                fallback: 'style',
-                use: ['css', 'postcss?sourceMap', 'sass']
-            })
-        }, {
-            test: /\.css$/,
-            loader: ExtractTextPlugin.extract({
-                fallback: "style",
-                use: ["css", "postcss"]
-            })
+            loader: 'url-loader?limit=25000&name=images/[name].[ext]',
+            exclude: '/node_modules'
         }]
     },
     plugins: [
         new webpack.DefinePlugin({
             'process.env': envConfig.env
-        }),
-        new webpack.LoaderOptionsPlugin({
-            options: {
-                context: __dirname,
-                postcss: [autoprefixer]
-            }
         }),
         new HtmlWebpackPlugin({
             title: 'Demo',
@@ -58,18 +36,7 @@ module.exports = {
                 removeComments: true
             },
             // favicon: './src/assets/favicon.png',
-        }),
-        new WebpackMd5Hash(),
-        new ExtractTextPlugin({
-            filename: '[name].[contenthash:8].css'
-        }),
-        // new webpack.optimize.UglifyJsPlugin({
-        //     compress: {
-        //         warnings: false
-        //     }
-        // }),
-
-        new webpack.LoaderOptionsPlugin({ minimize: true })
+        })
     ],
     resolveLoader: {
         moduleExtensions: ["-loader"]

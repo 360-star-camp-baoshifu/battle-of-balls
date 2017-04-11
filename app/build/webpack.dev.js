@@ -1,9 +1,40 @@
-const webpack = require('webpack');
 const config = require('./webpack.config');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 
-config.devtool = '#source-map';
+const styleLoaders = [{
+    test: /\.s[a|c]ss$/,
+    exclude: /node_modules/,
+    use: [{
+        loader: 'style'
+    }, {
+        loader: 'css'
+    }, {
+        loader: 'postcss',
+        options: {
+          plugins: () => [autoprefixer]
+        }
+    }, {
+        loader: 'sass'
+    }]
+}, {
+    test: /\.css$/,
+    use: [{
+        loader: 'style'
+    }, {
+        loader: 'css'
+    }, {
+        loader: 'postcss',
+        options: {
+          plugins: () => [autoprefixer]
+        }
+    }]
+}];
 
+config.output.filename = 'main.js';
+
+config.module.rules = config.module.rules.concat(styleLoaders);
+
+config.devtool = 'source-map';
 
 config.devServer = {
     contentBase: "./dist",//本地服务器所加载的页面所在的目录
@@ -13,4 +44,4 @@ config.devServer = {
     port: 8008
 };
 
-module.exports = config
+module.exports = config;
