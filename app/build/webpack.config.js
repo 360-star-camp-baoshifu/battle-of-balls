@@ -7,9 +7,10 @@ const WebpackMd5Hash = require('webpack-md5-hash');
 const ROOT_PATH = path.resolve(__dirname, '../');
 const SRC_PATH = path.resolve(__dirname, '../src');
 const DIST_PATH = path.resolve(__dirname, '../dist');
+const envConfig = require('../config/index')
 
 module.exports = {
-    entry: './src/main.js',
+    entry: './app/src/main.js',
     output: {
         path: DIST_PATH,
         publicPath: '/',
@@ -39,6 +40,9 @@ module.exports = {
         }]
     },
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env': envConfig.env
+        }),
         new webpack.LoaderOptionsPlugin({
             options: {
                 context: __dirname,
@@ -48,7 +52,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Demo',
             filename: './index.html', // 相对于output.path的路径
-            template: './src/index.html',
+            template: './app/src/index.html',
             inject: 'body',
             minify: {
                 removeComments: true
