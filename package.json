@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "server-dev": "cross-env NODE_ENV=development supervisor server/index.js",
+    "app-dev": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack.dev.js --host 127.0.0.1 --open --inline --hot",
+    "app-build": "rm -rf dist && mkdir dist && NODE_ENV=production webpack --config ./build/webpack.config.js --progress --hide-modules"
     "lint-fix": "eslint server/** --fix *.js"
   },
   "keywords": [
