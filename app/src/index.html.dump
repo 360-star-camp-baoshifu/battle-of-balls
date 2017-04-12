@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>鈿旂悆鐞冨ぇ浣滄垬</title>
+</head>
+<body>
+    <div class="container">
+        <canvas id="canvas"></canvas>
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script type="text/javascript">
+        var socket = io("http://localhost:3000/")
+        socket.on('connect', function(){
+            console.log(socket.id);
+        });
+    </script>
+</body>
+</html>
