@@ -23,6 +23,7 @@ export default class Mapper{
         this.foodCanvas = options.foodCanvas;
         this.mapCtx = this.mapCanvas.getContext('2d');
         this.foodCtx = this.foodCanvas.getContext('2d');
+        this.container = options.container;
         this.foodCanvas.width = defaultOptions.MAP_WIDTH;
         this.foodCanvas.height = defaultOptions.MAP_HEIGHT;
         this.mapCanvas.width = defaultOptions.MAP_WIDTH;
@@ -30,18 +31,6 @@ export default class Mapper{
     }
 
     render(foods, user) {
-        let options = this.options;
-
-        // let container = options.container || document.getElementsByClassName('container');
-        //
-        // let mapCanvas = document.createElement('canvas');
-        // mapCanvas.width = this.width, mapCanvas.height = this.height;
-
-        // let foodCanvas = mapCanvas.cloneNode(true);
-
-        // container.appendChild(mapCanvas);
-        // container.appendChild(foodCanvas);
-        //
         let mapCxt = this.mapCtx;
         let foodCxt = this.foodCtx;
         mapCxt.strokeStyle = '#FFCCCC';
@@ -64,7 +53,7 @@ export default class Mapper{
             drawFoods(foodCxt, _color, _x, _y, _r);
         });
 
-        Object.assign(this.mapCanvas.style, {
+        Object.assign(this.container.style, {
             position: 'absolute',
             top: user.x - defaultOptions.MAP_HEIGHT / 2 + 'px',
             left: user.y - defaultOptions.MAP_WIDTH / 2 + 'px',
@@ -72,15 +61,19 @@ export default class Mapper{
     }
 
     foodCanvasMove (user) {
-        Object.assign(this.mapCanvas.style, {
-            position: 'absolute',
-            left: defaultOptions.SCREEN_HEIGHT / 2 - user.x + 321 + 'px',
-            top: defaultOptions.SCREEN_WIDTH / 2 - user.y + 489 + 'px',
-        });
-        Object.assign(this.foodCanvas.style, {
-            position: 'absolute',
-            left: defaultOptions.SCREEN_HEIGHT / 2 - user.x + 321 + 'px',
-            top: defaultOptions.SCREEN_WIDTH / 2 - user.y + 489 + 'px',
+        // Object.assign(this.mapCanvas.style, {
+        //     position: 'absolute',
+        //     left: defaultOptions.SCREEN_HEIGHT / 2 - user.x + 289 + 'px',
+        //     top: defaultOptions.SCREEN_WIDTH / 2 - user.y - 289 + 'px',
+        // });
+        // Object.assign(this.foodCanvas.style, {
+        //     position: 'absolute',
+        //     left: defaultOptions.SCREEN_HEIGHT / 2 - user.x + 289 + 'px',
+        //     top: defaultOptions.SCREEN_WIDTH / 2 - user.y - 289 + 'px',
+        // });
+        Object.assign(this.container.style, {
+            left: defaultOptions.SCREEN_HEIGHT / 2 - user.x + 289 + 'px',
+            top: defaultOptions.SCREEN_WIDTH / 2 - user.y - 289 + 'px',
         });
     }
 }

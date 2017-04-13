@@ -7,7 +7,6 @@ export default class Ball {
         this.color = this.randomColor();
         this.v = v;
         let _deg = deg;
-        let that = this;
         Object.defineProperty(this,'deg',{
             set: function (value) {
                 _deg = value;

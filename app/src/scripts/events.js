@@ -30,8 +30,9 @@ function creatSelf() {
     user.drawSelf(SCREEN_WIDTH,SCREEN_HEIGHT);
     const mapCanvas = document.querySelector("#canvas-bg");
     const foodCanvas = document.querySelector("#canvas-food");
+    const container = document.querySelector(".container");
 
-    let map = new Map({mapCanvas,foodCanvas});
+    let map = new Map({mapCanvas,foodCanvas,container});
 
     let food = [{
         _x: SCREEN_WIDTH/3,
