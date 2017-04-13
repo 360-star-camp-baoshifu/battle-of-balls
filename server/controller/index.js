@@ -5,6 +5,10 @@ let userBallsMap = {}
 const foodBalls = []
 let foodBallsMap = {}
 
-async function eatFood () {
+function join () {
 
+}
+
+function eatFood (userBall, foodList) {
+    let userBall
 }
