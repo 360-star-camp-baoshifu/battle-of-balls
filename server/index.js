@@ -10,12 +10,15 @@ app.use(async (ctx, next)=> {
 })
 const server = http.createServer(app.callback())
 const io = require('socket.io')(server)
-io.on('connection', async (socket) => {
+
+
+io.on('connection', (socket) => {
+
     socket.emit('news', { hello: 'world' })
-    socket.on('other event', async (data) => {
+    socket.on('other event', (data) => {
         console.log(data)
     })
 })
-server.listen(3000, async () => {
+server.listen(3000, () => {
     console.log('server is running on port 3000')
 })

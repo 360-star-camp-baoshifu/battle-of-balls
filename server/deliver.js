@@ -6,21 +6,21 @@ function deliverAll(io) {
 		let ball = user.ball;
 		re.data.push(getBallInfo(ball));
 	};
-	io.emit('FRESH',JSON.stringfy(re));
+	io.emit('FRESH',JSON.stringify(re));
 }
 function deliverSingle(user){
 	let socket = user.socket,
 		ball = user.ball,
 		re = {
-			data:[getBallInfo(ball)];
+			data:[getBallInfo(ball)]
 		};
-	socket.emit('FRESH_SINGLE',JSON.stringfy(re));
+	socket.emit('FRESH_SINGLE',JSON.stringify(re));
 }
 function getBallInfo(ball){
 	return {
 		x:ball.x,
 		y:ball.y,
-		r:ball.r,
+		r:ball.radius,
 		sin:ball.sin,
 		cos:ball.cos,
 		speed:ball.speed
