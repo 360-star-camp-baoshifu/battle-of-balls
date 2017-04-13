@@ -11,7 +11,6 @@ app.use(async (ctx, next)=> {
 const server = http.createServer(app.callback())
 const io = require('socket.io')(server)
 io.on('connection', async (socket) => {
-    console.log('新连接')
     socket.emit('news', { hello: 'world' })
     socket.on('other event', async (data) => {
         console.log(data)

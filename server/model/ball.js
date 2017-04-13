@@ -1,6 +1,7 @@
 class Ball {
     static MIN_TIME_CALC_SPAN = 5
-    constructor (x, y, deg, r, type) {
+    constructor (x, y, deg, r, type, id) {
+        this.id = id
         this.x = x
         this.y = y
         this.speed = 1 / r
