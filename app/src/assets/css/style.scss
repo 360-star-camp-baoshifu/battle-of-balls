@@ -1,3 +1,30 @@
+body{
+  font-family: "Wawati SC" ,sans-serif;
+}
+.cover{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background: #faf8f9;
+  color: #666;
+  text-align: center;
+  h1{
+    margin-top: 30vh;
+    font-size: 3em;
+  }
+  .btn-start{
+    display: inline-block;
+    font-size: 2em;
+    transition: .2s;
+    cursor: pointer;
+  }
+  .btn-start:hover{
+    color: #333;
+  }
+}
 .container{
   width: 100vw;
   height: 100vh;
@@ -20,4 +47,9 @@
   text-align: center;
   line-height: 60px;
   transition: 1s;
+}
+canvas{
+  position: absolute;
+  top: 0;
+  left: 0;
 }
