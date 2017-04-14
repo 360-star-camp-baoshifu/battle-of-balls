@@ -47,11 +47,10 @@ io.on('connection', (socket) => {
             eatedLen = re.eatBalls.length;
         FruitBall.removeArr(re.eatBalls);
         for(let i = 0;i < eatedLen; i++){
-            FruitBall._list.push(new FruitBall());
+            FruitBall._list.push(new FruitBall(global.id++));
         }
     	io.emit('FRESH',JSON.stringify(FruitBall._list));
     })
-
     socket.on('eat-ball', data => {
     	User.update();
     	let re = eatBalls(User.getAllBalls());
