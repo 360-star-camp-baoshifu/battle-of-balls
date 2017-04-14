@@ -15,7 +15,8 @@ const io = require('socket.io')(server)
 const User = require('./model/User')
 const UserBall =  require('./model/user-ball')
 const FruitBall = require('./model/fruit-ball')
-
+const eatFood = require('./controller/eatFood')
+const eatBalls = require('./controller/eatBalls')
 const FRUIT_NUM = 20;
 
 io.on('connection', (socket) => {
@@ -38,11 +39,15 @@ io.on('connection', (socket) => {
     })
 
     socket.on('eat-food', data => {
-
+    	User.update();
+    	eatFood();
+    	io.emit('FRESH',JSON.stringify(User.getAllBalls()));
     })
 
     socket.on('eat-ball', data => {
-
+    	user.update();
+    	eatBalls();
+    	io.emit('FRESH',JSON.stringify(User.getAllBalls()));
     })
 })
 io.on('disconnect', (socket) => {
