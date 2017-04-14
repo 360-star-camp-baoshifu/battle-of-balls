@@ -32,9 +32,14 @@ io.on('connection', (socket) => {
     socket.emit('init', user.id)
     io.emit('new-user', JSON.stringify(User.getAllBalls()));
 
-    socket.on('change-degree', (data) => {
-        let data = JSON.parse(data)
+    socket.on('change-degree', (dataRaw) => {
+        let data = JSON.parse(dataRaw)
         let id = data.id
+        let {sin,cos} = data
+        let curUser = User.get(id)
+        User.ball.setDeg(sin, cos)
+        User.update()
+        io.emit('user-position', JSON.stringify(User.getAllBalls()))
     })
 
     socket.on('eat-food', data => {
@@ -46,8 +51,19 @@ io.on('connection', (socket) => {
     })
 })
 io.on('disconnect', (socket) => {
-    let disconUser = User._list.find(user => user.socket === socket)
-
+    let index = 0;
+    let disconnectUser
+    for (let i = 0 ; i < User._list.length; i++) {
+        if (socket === User.socket) {
+            index = i
+            disconnectUser = User[i]
+        }
+    }
+    if (!disconnectUser) {
+        return
+    }
+    User._list.splice(index, 1)
+    io.emit('user-position', JSON.stringify(User.getAllBalls()))
 })
 
 server.listen(3000, async () => {
