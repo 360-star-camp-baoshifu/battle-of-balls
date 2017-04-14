@@ -1,5 +1,4 @@
-import UserBall from './user-ball'
-
+const UserBall = require('./user-ball')
 let guid = 0;
 
 class User {
@@ -37,4 +36,4 @@ User.update = function () {
   this._list.forEach(user => user.ball._update());
 };
 
-export default User
+module.exports = User
