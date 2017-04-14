@@ -1,9 +1,6 @@
 const Ball = require('./ball')
+const TOTAL_WIDTH = 3000
 class UserBall extends Ball{
-    static RADIUS_MULTI_SPEED = 3000
-    static INIT_RADIUS = 30
-    static MIN_TIME_CALC_SPAN = 5
-    static list = []
     constructor (id) {
         super(id, UserBall.INIT_RADIUS)
         this.dirty = false
@@ -20,7 +17,9 @@ class UserBall extends Ball{
         let nowTimeStamp = Date.now()
         let path = (nowTimeStamp - this._lastTimeStamp) * this.speed
         this.x += path * this.cos
+        this.x = Math.max(0 + this.radius, Math.min(this.x, TOTAL_WIDTH - this.radius))
         this.y += path * this.sin
+        this.y = Math.max(0 + this.radius, Math.min(this.y, TOTAL_WIDTH - this.radius))
         this._lastTimeStamp = nowTimeStamp
         this.dirty = false
     }
@@ -53,4 +52,9 @@ class UserBall extends Ball{
         this.radius = Math.sqrt(Math.pow(this.radius, 2) + Math.pow(radius, 2))
     }
 }
+UserBall.RADIUS_MULTI_SPEED = 3000
+UserBall.INIT_RADIUS = 30
+UserBall.MIN_TIME_CALC_SPAN = 5
+UserBall.list = []
+
 module.exports = UserBall

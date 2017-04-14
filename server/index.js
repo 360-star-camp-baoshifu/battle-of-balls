@@ -15,9 +15,8 @@ const io = require('socket.io')(server)
 const User = require('./model/User')
 const UserBall =  require('./model/user-ball')
 const FruitBall = require('./model/fruit-ball')
-const eatFood = require('./controller/eatFood')
-const eatBalls = require('./controller/eatBalls')
-const FRUIT_NUM = 20;
+const { eatFood, eatBalls } = require('./controller/eat')
+const FRUIT_NUM = 20
 
 io.on('connection', (socket) => {
     if (User.num() === 0) {
@@ -29,18 +28,22 @@ io.on('connection', (socket) => {
         }
     }
 
-    let user = new User(socket);
+    let user = new User(socket)
     socket.emit('init', user.id)
-    io.emit('new-user', JSON.stringify(User.getAllBalls()));
-
-    socket.on('change-degree', (data) => {
-        let data = JSON.parse(data)
+    io.emit('new-user', JSON.stringify(User.getAllBalls()))
+    socket.on('change-degree', (dataRaw) => {
+        let data = JSON.parse(dataRaw)
         let id = data.id
+        let {sin,cos} = data
+        let curUser = User.get(id)
+        curUser.ball.setDeg(sin, cos)
+        User.update()
+        io.emit('FRESH', JSON.stringify(User.getAllBalls()))
     })
 
     socket.on('eat-food', data => {
     	User.update();
-    	eatFood();
+    	let re = eatFood(FruitBall._list);
     	let newFood = new FruitBall();
     	newFood._generate();
     	FruitBall._list.push(newFood);
@@ -48,15 +51,25 @@ io.on('connection', (socket) => {
     })
 
     socket.on('eat-ball', data => {
-    	user.update();
-    	let re = eatBalls();
-    	
-    	io.emit('FRESH',JSON.stringify(User.getAllBalls()));
+    	User.update()
+    	eatBalls(User.getAllBalls())
+    	io.emit('FRESH', JSON.stringify(User.getAllBalls()))
     })
 })
 io.on('disconnect', (socket) => {
-    let disconUser = User._list.find(user => user.socket === socket)
-
+    let index = 0;
+    let disconnectUser
+    for (let i = 0 ; i < User._list.length; i++) {
+        if (socket === User.socket) {
+            index = i
+            disconnectUser = User[i]
+        }
+    }
+    if (!disconnectUser) {
+        return
+    }
+    User._list.splice(index, 1)
+    io.emit('user-position', JSON.stringify(User.getAllBalls()))
 })
 
 server.listen(3000, async () => {

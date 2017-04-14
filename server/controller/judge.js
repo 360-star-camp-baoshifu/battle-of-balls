@@ -65,7 +65,7 @@ function judgePosWithBalls(x,y,r,balls){
 		y:y,
 		r:r
 	}
-	return judegBall(ball,balls);
+	return judgeBall(ball,balls);
 }
 module.exports = {
     judge,

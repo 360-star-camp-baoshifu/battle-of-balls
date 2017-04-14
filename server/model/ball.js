@@ -1,7 +1,6 @@
 const {judgePosWithBalls} = require('../controller/judge')
 const TOTAL_WIDTH = 3000
 class Ball {
-    static list = []
     constructor (id, radius) {
         this.id = id
         this._generate(radius)
@@ -23,5 +22,5 @@ class Ball {
         this._radius = radius
     }
 }
-
+Ball.list = []
 module.exports = Ball

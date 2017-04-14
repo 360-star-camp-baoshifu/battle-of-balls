@@ -1,12 +1,14 @@
-function eatBalls () {
-	return eat();
+const User = require('../model/User')
+const { judgeAll } = require('./judge')
+
+function eatBalls (balls) {
+	return eat(balls);
 }
-function eatFood () {
-	return eat(0);
+function eatFood (balls) {
+	return eat(balls,0);
 }
-function eat (diff) {
-	let balls = User.getAllBalls(),
-		judgeResult = judgeAll(balls,diff);
+function eat (balls,diff) {
+	let judgeResult = judgeAll(balls,diff);
 	for(let ballWrapper of judgeResult.eatBalls){
 		ballWrapper.ball.grow(ballWrapper.r)
 	}
