@@ -1,6 +1,5 @@
 const User = require('../model/User')
-const { judgeAll } = require('./judge')
-const judgeAllFromTwo = require('./judgeAllFromTwo')
+const { judgeAll, judgeAllFromTwo } = require('./judge')
 function eatFood (balls1,balls2) {
 	let judgeResult = judgeAllFromTwo(balls1,balls2,0);
 	for(let ballWrapper of judgeResult.eatBalls){

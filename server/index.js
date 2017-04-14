@@ -22,8 +22,8 @@ global.id = 0
 io.on('connection', (socket) => {
     if (User.num() === 0) {
         User.list = []
-        UserBall.list = []
-        FruitBall.list = []
+        UserBall.list.length = 0
+        FruitBall.list.length = 0
         for (let i = 0; i < FRUIT_NUM; i++) {
             new FruitBall(global.id++)
         }
@@ -33,9 +33,11 @@ io.on('connection', (socket) => {
     socket.on('init', () => {
         let user = new User(global.id++)
         socket.emit('init', user.id)
+        io.emit('new-user', JSON.stringify(User.getAllBalls()))
+        io.emit('fruit-fresh', JSON.stringify(FruitBall.list))
     })
 
-    io.emit('new-user', JSON.stringify(User.getAllBalls()))
+
     socket.on('change-degree', (dataRaw) => {
         let data = JSON.parse(dataRaw)
         let id = data.id
@@ -43,24 +45,24 @@ io.on('connection', (socket) => {
         let curUser = User.get(id)
         curUser.ball.setDeg(sin, cos)
         User.update()
-        io.emit('FRESH', JSON.stringify(User.getAllBalls()))
+        io.emit('fresh', JSON.stringify(User.getAllBalls()))
     })
 
     socket.on('eat-food', () => {
     	User.update();
-    	let re = eatFood(FruitBall.list),
+    	let re = eatFood(FruitBall.list, UserBall.list),
             eatedLen = re.eatBalls.length;
         FruitBall.removeArr(re.eatBalls);
         for(let i = 0;i < eatedLen; i++){
             new FruitBall(global.id++);
         }
-    	io.emit('FRESH',JSON.stringify(FruitBall.list));
+    	io.emit('fruit-fresh',JSON.stringify(FruitBall.list));
     })
     socket.on('eat-ball', data => {
     	User.update();
     	let re = eatBalls(User.getAllBalls());
         User.removeArrById(re.eatBalls.map(ball => ball.id));
-    	io.emit('FRESH', JSON.stringify(User.getAllBalls()))
+    	io.emit('fresh', JSON.stringify(User.getAllBalls()))
     })
 })
 io.on('disconnect', (socket) => {
@@ -76,10 +78,6 @@ io.on('disconnect', (socket) => {
         return
     }
     User.list.splice(index, 1)
-    if (User.list.length === 0) {
-        FruitBall.list.length = 0
-        UserBall.list = 0
-    }
     io.emit('user-position', JSON.stringify(User.getAllBalls()))
 })
 
