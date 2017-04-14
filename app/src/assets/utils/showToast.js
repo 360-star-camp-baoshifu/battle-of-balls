@@ -1,5 +1,5 @@
 function showToast(message) {
-    const ctn = document.querySelector('.container');
+    const ctn = document.body;
     let toast = document.createElement('div');
     toast.className = 'toast';
     toast.innerHTML = message;

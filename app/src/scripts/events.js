@@ -7,9 +7,43 @@ const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
 const canvas_self = document.querySelector("#canvas-self");
+const canvas_balls = document.querySelector("#canvas-balls");
 let ctx_self = canvas_self.getContext('2d');
-let user = new Ball(ctx_self,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,30,250,[0,1]);
+let ctx_balls = canvas_balls.getContext('2d');
+canvas_balls.width = 3000;
+canvas_balls.height = 3000;
+let balls_arr = [{
+    ctx: ctx_balls,
+    x: 300,
+    y: 300,
+    r: 30,
+    v: 250,
+    deg: [0.6,0.8],
+    id: 10002
+},{
+    ctx: ctx_balls,
+    x: 136,
+    y: 289,
+    r: 30,
+    v: 250,
+    deg: [-1,0],
+    id: 10003
+},{
+    ctx: ctx_balls,
+    x: 2366,
+    y: 1289,
+    r: 30,
+    v: 250,
+    deg: [0.8,0.6],
+    id: 10004
+}];
 
+let user = new Ball(ctx_self,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,30,250,[0,1],10001);
+
+let othersLayer = new OthersLayer();
+balls_arr.forEach((item)=>{
+    othersLayer.newPlayer(new Ball(item.ctx,item.x,item.y,item.r,item.v,item.deg,item.id))
+});
 
 function socketStart(cover) {
     // let socket = io("http://localhost:3000/");
@@ -59,8 +93,18 @@ function creatSelf() {
 
             moveFoods();
         })
-    })()
+    })();
 
+    (function moveBalls() {
+        requestAnimationFrame(()=>{
+            othersLayer.drawBallsorNot(user.x-SCREEN_WIDTH/2,user.y-SCREEN_HEIGHT/2,SCREEN_WIDTH,SCREEN_HEIGHT);
+            if (othersLayer.inView.size) {
+                ctx_balls.clearRect(0,0,3000,3000);
+                othersLayer.drawBalls(ctx_balls,user.x-SCREEN_WIDTH/2,user.y-SCREEN_HEIGHT/2,SCREEN_WIDTH,SCREEN_HEIGHT);
+            }
+            moveBalls();
+        })
+    })();
 }
 
 

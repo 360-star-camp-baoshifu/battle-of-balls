@@ -1,7 +1,8 @@
 body{
+  width: 100vw;
+  height: 100vh;
   font-family: "Wawati SC" ,sans-serif;
   overflow: hidden;
-
 }
 .cover{
   position: absolute;
@@ -33,6 +34,7 @@ body{
   background: #FFFAD8;
   text-align: center;
   position: relative;
+  will-change: transform;
 }
 .toast{
   position: fixed;

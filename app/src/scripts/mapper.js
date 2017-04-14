@@ -53,11 +53,14 @@ export default class Mapper{
             drawFoods(foodCxt, _color, _x, _y, _r);
         });
 
-        Object.assign(this.container.style, {
-            position: 'absolute',
-            top: user.x - defaultOptions.MAP_HEIGHT / 2 + 'px',
-            left: user.y - defaultOptions.MAP_WIDTH / 2 + 'px',
-        });
+        // transform: 'translate('+ defaultOptions.SCREEN_WIDTH / 2 - user.x + 289 + ','+ defaultOptions.SCREEN_HEIGHT / 2 - user.y - 289 +')'
+        this.container.style.transform = 'translate('+ defaultOptions.SCREEN_WIDTH / 2 - user.x + 'px,'+ defaultOptions.SCREEN_HEIGHT / 2 - user.y  +'px)'
+
+        // Object.assign(this.container.style, {
+        //  // position: 'absolute',
+        //     // top: user.x - defaultOptions.MAP_HEIGHT / 2 + 'px',
+        //     // left: user.y - defaultOptions.MAP_WIDTH / 2 + 'px',
+        // });
     }
 
     foodCanvasMove (user) {
@@ -71,9 +74,9 @@ export default class Mapper{
         //     left: defaultOptions.SCREEN_HEIGHT / 2 - user.x + 289 + 'px',
         //     top: defaultOptions.SCREEN_WIDTH / 2 - user.y - 289 + 'px',
         // });
-        Object.assign(this.container.style, {
-            left: defaultOptions.SCREEN_HEIGHT / 2 - user.x + 289 + 'px',
-            top: defaultOptions.SCREEN_WIDTH / 2 - user.y - 289 + 'px',
-        });
+        // console.log('ox');
+        // console.log('translate('+ (defaultOptions.SCREEN_WIDTH / 2 - user.x)  + 'px,'+ (defaultOptions.SCREEN_HEIGHT / 2 - user.y) + 'px)')
+        this.container.style.transform = 'translate('+ (defaultOptions.SCREEN_WIDTH / 2 - user.x)  + 'px,'+ (defaultOptions.SCREEN_HEIGHT / 2 - user.y) + 'px)'
+
     }
 }
