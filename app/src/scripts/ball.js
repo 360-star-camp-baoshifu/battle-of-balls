@@ -1,3 +1,6 @@
+const SCREEN_WIDTH = window.innerWidth;
+const SCREEN_HEIGHT = window.innerHeight;
+
 export default class Ball {
     constructor (ctx,x,y,r,v,deg,id) {
         this.ctx = ctx;
@@ -74,6 +77,7 @@ export default class Ball {
         this.v = v;
         this.deg = deg;
         this.id = id;
+        this.drawSelf(SCREEN_WIDTH,SCREEN_HEIGHT);
     }
 
     isInViewPort (viewx, viewy, viewwidth, viewheigth) {
@@ -91,18 +95,10 @@ export default class Ball {
 
     touchStart (otherball) {
         let distance = Math.sqrt(Math.pow(otherball.x - this.x, 2) + Math.pow(otherball.y - this.y, 2));
-        if (distance < (otherball.r + this.r)) {
-            return true;
-        } else {
-            return false;
-        }
+        return distance < (otherball.r + this.r)
     }
     touchFood (x,y,r) {
         let distance = Math.sqrt(Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2));
-        if (distance < (r + this.r)) {
-            return true;
-        } else {
-            return false;
-        }
+        return distance < (r + this.r)
     }
 }

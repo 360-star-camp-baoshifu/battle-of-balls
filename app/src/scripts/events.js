@@ -2,6 +2,7 @@ import io from 'socket.io-client'
 import Ball from './ball'
 import OthersLayer from './others'
 import Map from './mapper'
+import showToast from '../assets/utils/showToast'
 import throttle from 'lodash.throttle'
 
 const SCREEN_WIDTH = window.innerWidth;
@@ -31,9 +32,11 @@ let flags = {};
 let sendEat = throttle(()=>{
     if (ballFlag){
         socket.emit('eat-ball')
+        ballFlag = false;
     }
     if (foodFlag){
         socket.emit('eat-food')
+        foodFlag = false
     }
 },50);
 Object.defineProperty(flags,'ballFlag', {
@@ -55,15 +58,7 @@ Object.defineProperty(flags,'foodFlag', {
         return foodFlag;
     }
 });
-Object.defineProperty(flags,'food', {
-    set: function (value) {
-        food = value;
-        map.render(food,user);
-    },
-    get: function () {
-        return food;
-    }
-});
+
 function creatItems() {
 
     // self
@@ -93,12 +88,12 @@ function creatItems() {
             othersLayer.drawBallsorNot(user.x-SCREEN_WIDTH/2,user.y-SCREEN_HEIGHT/2,SCREEN_WIDTH,SCREEN_HEIGHT);
             if (othersLayer.inView.size) {
                 ctx_balls.clearRect(0,0,3000,3000);
-                ballFlag = othersLayer.drawBalls(user)?true:ballFlag;//返回有无和其他玩家碰撞
+                flags.ballFlag = othersLayer.drawBalls(user)?true:flags.ballFlag;//返回有无和其他玩家碰撞
             }
             moveBalls();
         });
         food.forEach((value) => {
-            foodFlag = user.touchFood(value.x, value.y, value._radius)?true:foodFlag;//返回有无和食物碰撞
+            flags.foodFlag = user.touchFood(value.x, value.y, value._radius)?true:flags.foodFlag;//返回有无和食物碰撞
         })
     })();
 }
@@ -114,6 +109,7 @@ function bindEvents() {
         init = false;
         user = null;
         othersLayer.balls = [];
+        let isDead = true;
         document.addEventListener('mousemove',function (e) {
             // e.preventDefault();
             let x = e.pageX - SCREEN_WIDTH / 2;
@@ -122,13 +118,15 @@ function bindEvents() {
             user.deg = [x / len, y / len];
             sendDeg();
         });
-        // socket.on('connect', function(){
-        // });
         socket.emit('init');
         socket.on('init',function (content) {
             user_id = parseInt(JSON.parse(content));
+            isDead = false
         });
         socket.on('fresh',function (content) {
+            if (isDead) {
+                return
+            }
             temp = JSON.parse(content);
             othersLayer.balls =[];
             if (!init){
@@ -144,7 +142,6 @@ function bindEvents() {
                 cover.style.display = 'none';
 
             } else {
-                let isDead = true;
 
                 temp.forEach((item)=>{
                     if (item.id === user_id){
@@ -155,14 +152,17 @@ function bindEvents() {
                     }
                 });
                 if (isDead){
+                    showToast('你挂了，老铁，帮你重生了');
                     gameStart();
                 }
             }
         });
         socket.on('fruit-fresh',function (content) {
+            if (isDead) {
+                return
+            }
             food = JSON.parse(content);
-            console.log(food);
-
+            map.render(food,user);
         });
     });
     let sendDeg = throttle(()=>{

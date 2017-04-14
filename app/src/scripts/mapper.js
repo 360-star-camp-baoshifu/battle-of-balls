@@ -31,8 +31,10 @@ export default class Mapper{
     }
 
     render(foods, user) {
+
         let mapCxt = this.mapCtx;
         let foodCxt = this.foodCtx;
+        foodCxt.clearRect(0,0,3000,3000);
         mapCxt.strokeStyle = '#FFCCCC';
 
         for(let i = 0; i < 31; i++){
