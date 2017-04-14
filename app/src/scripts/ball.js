@@ -2,13 +2,13 @@ const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
 export default class Ball {
-    constructor (ctx,x,y,r,v,deg,id) {
+    constructor (ctx,x,y,r,v,deg,id,color) {
         this.ctx = ctx;
         this.x = x;
         this.y = y;
         this.r = r;
         this.id = id;
-        this.color = this.randomColor();
+        this.color = color;
         this.v = v;
         this.lastTimeStamp = Date.now()
         let _deg = deg;
@@ -22,10 +22,7 @@ export default class Ball {
         });
     }
 
-    randomColor () {
-        let colors = ['red', 'blue', 'brown', 'green', 'black', 'orange'];
-        return colors[Math.floor(Math.random() * (colors.length - 1))];
-    }
+
 
     drawCircle () {
         // this.ctx
@@ -73,11 +70,14 @@ export default class Ball {
     update (x, y, r, v, deg, id) {
         this.x = x;
         this.y = y;
-        this.r = r;
+        if (this.r !== r){
+            this.r = r;
+            this.drawSelf(SCREEN_WIDTH,SCREEN_HEIGHT);
+
+        }
         this.v = v;
         this.deg = deg;
         this.id = id;
-        this.drawSelf(SCREEN_WIDTH,SCREEN_HEIGHT);
     }
 
     isInViewPort (viewx, viewy, viewwidth, viewheigth) {

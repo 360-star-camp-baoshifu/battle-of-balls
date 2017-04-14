@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 import Ball from './ball'
 import OthersLayer from './others'
-import Map from './mapper'
+import Mapper from './mapper'
 import showToast from '../assets/utils/showToast'
 import throttle from 'lodash.throttle'
 
@@ -17,12 +17,18 @@ const container = document.querySelector(".container");
 
 let ctx_self = canvas_self.getContext('2d');
 let ctx_balls = canvas_balls.getContext('2d');
-let map = new Map({mapCanvas,foodCanvas,container});
+let map = new Mapper({mapCanvas,foodCanvas,container});
 
 let user = null;
 let user_id = null;
 let othersLayer = new OthersLayer();
 let food = [];
+let colors = new Map();
+
+function randomColor () {
+    let colors = ['red', 'blue', 'brown', 'green', 'black', 'orange'];
+    return colors[Math.floor(Math.random() * (colors.length - 1))];
+}
 
 let socket = io("http://www.baoshifu.com");
 
@@ -128,13 +134,17 @@ function bindEvents() {
                 return
             }
             temp = JSON.parse(content);
+
             othersLayer.balls =[];
             if (!init){
                 temp.forEach((item)=>{
                     if (item.id === user_id){
                         user = new Ball(ctx_self,item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id);
                     } else {
-                        othersLayer.newPlayer(new Ball(ctx_balls,item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id))
+                        if (typeof colors[item.id] === 'undefined'){
+                            colors[item.id] = randomColor();
+                        }
+                        othersLayer.newPlayer(new Ball(ctx_balls,item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id,colors[item.id]))
                     }
                     init = true;
                 });
@@ -148,7 +158,10 @@ function bindEvents() {
                         user.update(item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id);
                         isDead = false;
                     } else {
-                        othersLayer.newPlayer(new Ball(ctx_balls,item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id))
+                        if (typeof colors[item.id] === 'undefined'){
+                            colors[item.id] = randomColor();
+                        }
+                        othersLayer.newPlayer(new Ball(ctx_balls,item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id,colors[item.id]))
                     }
                 });
                 if (isDead){
@@ -166,7 +179,7 @@ function bindEvents() {
         });
     });
     let sendDeg = throttle(()=>{
-        socket.emit('change-degree',JSON.stringify({"cos":user.deg[0], "sin": user.deg[1], "id": user.id}))
+        socket.emit('change-degree',JSON.stringify({"cos":user.deg[0], "sin": user.deg[1], "id": user_id}))
     },50);
 
 }
