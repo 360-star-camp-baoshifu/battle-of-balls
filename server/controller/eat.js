@@ -1,13 +1,14 @@
 const User = require('../model/User')
 const { judgeAll } = require('./judge')
-
-function eatBalls (balls) {
-	return eat(balls);
+const judgeAllFromTwo = require('./judgeAllFromTwo')
+function eatFood (balls1,balls2) {
+	let judgeResult = judgeAllFromTwo(balls1,balls2,0);
+	for(let ballWrapper of judgeResult.eatBalls){
+		ballWrapper.ball.grow(ballWrapper.r)
+	}
+	return judgeResult;
 }
-function eatFood (balls) {
-	return eat(balls,0);
-}
-function eat (balls,diff) {
+function eatBalls (balls,callback,diff) {
 	let judgeResult = judgeAll(balls,diff);
 	for(let ballWrapper of judgeResult.eatBalls){
 		ballWrapper.ball.grow(ballWrapper.r)

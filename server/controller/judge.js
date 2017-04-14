@@ -24,6 +24,34 @@ function judgeBall(ball,balls){
 		eatBalls:Array.from(eatBalls)
 	}
 }
+function judgeAllFromTwo(balls1,balls2,diff){
+	let surviveBalls = [],
+		deadBalls = new Set(),
+		eatBalls = new Set();
+	for(var i = 0;i < balls1.length;i++){
+		for(var j = 0;j < balls2.length;j++){
+			var re = judge(balls1[i],balls2[j],diff);
+			if(re){
+				deadBalls.add(re[1]);
+				eatBalls.add({ball:re[0],r:re[1].radius});
+			}
+		}
+	}
+	for(let balli of balls){
+		if(!deadBalls.has(balli))
+			surviveBalls.push(balli);
+	}
+	for(let balli of eatBalls){
+		if(deadBalls.has(balli.ball)){
+			eatBalls.delete(balli);
+		}
+	}
+	return {
+		surviveBalls:surviveBalls,
+		deadBalls:Array.from(deadBalls),
+		eatBalls:Array.from(eatBalls)
+	}
+}
 function judgeAll(balls,diff){
 	let surviveBalls = [],
 		deadBalls = new Set(),
@@ -71,5 +99,6 @@ module.exports = {
     judge,
     judgePosWithBalls,
     judgeAll,
-    judgeBall
+    judgeBall,
+    judgeAllFromTwo
 }
