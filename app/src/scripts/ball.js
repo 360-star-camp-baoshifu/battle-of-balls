@@ -83,9 +83,9 @@ export default class Ball {
     isInViewPort (viewx, viewy, viewwidth, viewheigth) {
         let vertexes = new Array(4).fill().map((_, i) => [viewx-100 + (viewwidth+100) * (i % 2), viewy-100 + (viewheigth+100) * Math.floor(i / 2)]);
         for (let key in vertexes) {
-            this.ctx.beginPath();
-            this.ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI);
-            this.ctx.closePath();
+            // this.ctx.beginPath();
+            // this.ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+            // this.ctx.closePath();
             if (this.ctx.isPointInPath(vertexes[key][0], vertexes[key][0])) {
                 return true;
             }

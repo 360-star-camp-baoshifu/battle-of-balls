@@ -91,6 +91,7 @@ function creatItems() {
 
     (function moveBalls() {
         requestAnimationFrame(()=>{
+
             othersLayer.drawBallsorNot(user.x-SCREEN_WIDTH/2,user.y-SCREEN_HEIGHT/2,SCREEN_WIDTH,SCREEN_HEIGHT);
             if (othersLayer.inView.size) {
                 ctx_balls.clearRect(0,0,3000,3000);
@@ -152,7 +153,7 @@ function bindEvents() {
                 cover.style.display = 'none';
 
             } else {
-
+                isDead = true;
                 temp.forEach((item)=>{
                     if (item.id === user_id){
                         user.update(item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id);
