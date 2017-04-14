@@ -43,16 +43,19 @@ io.on('connection', (socket) => {
 
     socket.on('eat-food', data => {
     	User.update();
-    	let re = eatFood(FruitBall._list);
-    	let newFood = new FruitBall();
-    	newFood._generate();
-    	FruitBall._list.push(newFood);
-    	io.emit('FRESH',JSON.stringify(User.getAllBalls()));
+    	let re = eatFood(FruitBall._list),
+            eatedLen = re.eatBalls.length;
+        FruitBall.removeArr(re.eatBalls);
+        for(let i = 0;i < eatedLen; i++){
+            FruitBall._list.push(new FruitBall());
+        }
+    	io.emit('FRESH',JSON.stringify(FruitBall._list));
     })
 
     socket.on('eat-ball', data => {
-    	User.update()
-    	eatBalls(User.getAllBalls())
+    	User.update();
+    	let re = eatBalls(User.getAllBalls());
+        User.removeArrById(re.eatBalls.map(ball => ball.id));
     	io.emit('FRESH', JSON.stringify(User.getAllBalls()))
     })
 })
