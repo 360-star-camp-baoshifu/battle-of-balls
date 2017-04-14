@@ -1,7 +1,10 @@
-export function eatBalls () {
+const User = require('../model/User')
+const { judgeAll } = require('./judge')
+
+function eatBalls () {
 	eat();
 }
-export function eatFood () {
+function eatFood () {
 	eat(0);
 }
 function eat (diff) {
@@ -10,4 +13,8 @@ function eat (diff) {
 	for(let ballWrapper of judgeResult.eatBalls){
 		ballWrapper.ball.grow(ballWrapper.r)
 	}
+}
+module.exports = {
+	eatBalls,
+	eatFood
 }

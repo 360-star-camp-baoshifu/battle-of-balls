@@ -15,8 +15,8 @@ const io = require('socket.io')(server)
 const User = require('./model/User')
 const UserBall =  require('./model/user-ball')
 const FruitBall = require('./model/fruit-ball')
-
-const FRUIT_NUM = 20;
+const { eatFood, eatBalls } = require('./controller/eat')
+const FRUIT_NUM = 20
 
 io.on('connection', (socket) => {
     if (User.num() === 0) {
@@ -28,10 +28,9 @@ io.on('connection', (socket) => {
         }
     }
 
-    let user = new User(socket);
+    let user = new User(socket)
     socket.emit('init', user.id)
-    io.emit('new-user', JSON.stringify(User.getAllBalls()));
-
+    io.emit('new-user', JSON.stringify(User.getAllBalls()))
     socket.on('change-degree', (dataRaw) => {
         let data = JSON.parse(dataRaw)
         let id = data.id
@@ -39,15 +38,19 @@ io.on('connection', (socket) => {
         let curUser = User.get(id)
         User.ball.setDeg(sin, cos)
         User.update()
-        io.emit('user-position', JSON.stringify(User.getAllBalls()))
+        io.emit('FRESH', JSON.stringify(User.getAllBalls()))
     })
 
     socket.on('eat-food', data => {
-
+    	User.update()
+    	eatFood()
+    	io.emit('FRESH', JSON.stringify(User.getAllBalls()))
     })
 
     socket.on('eat-ball', data => {
-
+    	User.update()
+    	eatBalls()
+    	io.emit('FRESH', JSON.stringify(User.getAllBalls()))
     })
 })
 io.on('disconnect', (socket) => {

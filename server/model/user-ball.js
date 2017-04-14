@@ -56,4 +56,5 @@ UserBall.RADIUS_MULTI_SPEED = 3000
 UserBall.INIT_RADIUS = 30
 UserBall.MIN_TIME_CALC_SPAN = 5
 UserBall.list = []
+
 module.exports = UserBall

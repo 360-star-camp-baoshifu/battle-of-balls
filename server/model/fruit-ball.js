@@ -7,4 +7,5 @@ class FruitBall extends Ball {
 }
 FruitBall.INIT_RADIUS = 10
 FruitBall.list = []
+
 module.exports = FruitBall
