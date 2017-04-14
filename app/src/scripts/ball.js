@@ -57,15 +57,15 @@ export default class Ball {
         //边界判断
         this.x = (0 < newx - this.r && 3000 > newx + this.r) ? newx : this.x;
         this.y = (0 < newy - this.r && 3000 > newy + this.r) ? newy : this.y;
-        // console.log(this.x,this.y)
     }
 
-    update (x, y, r, v, deg) {
+    update (x, y, r, v, deg, id) {
         this.x = x;
         this.y = y;
         this.r = r;
         this.v = v;
         this.deg = deg;
+        this.id = id;
     }
 
     isInViewPort (viewx, viewy, viewwidth, viewheigth) {
@@ -82,8 +82,16 @@ export default class Ball {
     }
 
     touchStart (otherball) {
-        let distance = Math.sqrt(Math.pow(otherball.x - this.x, 2) + Math.pow(otherball.y - this.y, 2))
+        let distance = Math.sqrt(Math.pow(otherball.x - this.x, 2) + Math.pow(otherball.y - this.y, 2));
         if (distance < (otherball.r + this.r)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    touchFood (x,y,r) {
+        let distance = Math.sqrt(Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2));
+        if (distance < (r + this.r)) {
             return true;
         } else {
             return false;

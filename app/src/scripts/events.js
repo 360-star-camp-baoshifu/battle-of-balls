@@ -2,10 +2,28 @@
 import Ball from './ball'
 import OthersLayer from './others'
 import Map from './mapper'
+import throttle from 'lodash.throttle'
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
+let messageFlag = false;
+let flags = {
+
+}
+let sendEat = throttle(()=>{
+
+},50);
+Object.defineProperty(flags,'messageFlag', {
+    set: function (value) {
+        messageFlag = value;
+        // 发送数据
+        sendEat()
+    },
+    get: function () {
+        return messageFlag;
+    }
+})
 const canvas_self = document.querySelector("#canvas-self");
 const canvas_balls = document.querySelector("#canvas-balls");
 let ctx_self = canvas_self.getContext('2d');
@@ -100,9 +118,12 @@ function creatSelf() {
             othersLayer.drawBallsorNot(user.x-SCREEN_WIDTH/2,user.y-SCREEN_HEIGHT/2,SCREEN_WIDTH,SCREEN_HEIGHT);
             if (othersLayer.inView.size) {
                 ctx_balls.clearRect(0,0,3000,3000);
-                othersLayer.drawBalls(ctx_balls,user.x-SCREEN_WIDTH/2,user.y-SCREEN_HEIGHT/2,SCREEN_WIDTH,SCREEN_HEIGHT);
+                messageFlag = othersLayer.drawBalls(user)?true:messageFlag;//返回有无和其他玩家碰撞
             }
             moveBalls();
+        });
+        food.forEach((value) => {
+            messageFlag = user.touchFood(value._x, value._y, value._r)?true:messageFlag;//返回有无和食物碰撞
         })
     })();
 }
@@ -118,6 +139,9 @@ function bindEvents() {
     //     })
     //
     // })()
+    let sendDeg = throttle(()=>{
+
+    },50);
     socketStart(cover);
     document.addEventListener('mousemove',function (e) {
         // e.preventDefault();
@@ -125,6 +149,7 @@ function bindEvents() {
         let y = e.pageY - SCREEN_HEIGHT / 2;
         let len = Math.sqrt(x * x + y * y);
         user.deg = [x / len, y / len];
+        sendDeg();
     })
 }
 
