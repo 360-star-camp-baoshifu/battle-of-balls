@@ -1,3 +1,6 @@
+const User = require('../model/User')
+const { judgeAll } = require('./judge')
+
 function eatBalls () {
 	eat();
 }
