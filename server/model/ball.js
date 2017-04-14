@@ -1,4 +1,4 @@
-import {judgePosWithBalls} from '../judge'
+const {judgePosWithBalls} = require('../controller/judge')
 const TOTAL_WIDTH = 3000
 class Ball {
     static list = []
@@ -24,4 +24,4 @@ class Ball {
     }
 }
 
-export default Ball
+module.exports = Ball

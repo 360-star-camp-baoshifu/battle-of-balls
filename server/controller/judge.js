@@ -1,4 +1,4 @@
-function judegBall(ball,balls){
+function judgeBall(ball,balls){
 	let surviveBalls = [],
 		deadBalls = new Set(),
 		eatBalls = new Set();
@@ -59,11 +59,17 @@ function judge(ball1,ball2,diff = Math.min(ball1.r,ball2.r) ){
 	if(sumR - dis > diff) return ball1.r > ball2.r ? [ball2,ball1] : [ball1,ball2];
 	return null;
 }
-export function judgePosWithBalls(x,y,r,balls){
+function judgePosWithBalls(x,y,r,balls){
 	let ball = {
 		x:x,
 		y:y,
 		r:r
 	}
 	return judegBall(ball,balls);
+}
+module.exports = {
+    judge,
+    judgePosWithBalls,
+    judgeAll,
+    judgeBall
 }

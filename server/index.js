@@ -2,7 +2,6 @@ const http = require('http')
 const Koa = require('koa')
 const app = new Koa()
 const cors = require('kcors')
-let User = require('./model/User')
 
 app.use(cors({
     maxAge: 7 * 24 * 60 * 60
@@ -13,9 +12,9 @@ app.use(async (ctx, next)=> {
 const server = http.createServer(app.callback())
 const io = require('socket.io')(server)
 
-import User from './model/User'
-import UserBall from './model/user-ball'
-import FruitBall from './model/fruit-ball'
+const User = require('./model/User')
+const UserBall =  require('./model/user-ball')
+const FruitBall = require('./model/fruit-ball')
 
 const FRUIT_NUM = 20;
 

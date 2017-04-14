@@ -1,4 +1,4 @@
-import Ball from './ball'
+const Ball = require('./ball')
 class UserBall extends Ball{
     static RADIUS_MULTI_SPEED = 3000
     static INIT_RADIUS = 30
@@ -53,4 +53,4 @@ class UserBall extends Ball{
         this.radius = Math.sqrt(Math.pow(this.radius, 2) + Math.pow(radius, 2))
     }
 }
-export default UserBall
+module.exports = UserBall

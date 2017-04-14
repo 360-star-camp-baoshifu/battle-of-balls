@@ -1,4 +1,4 @@
-import Ball from './ball'
+const Ball = require('./ball')
 class FruitBall extends Ball {
     static INIT_RADIUS = 10
     static list = []
@@ -7,4 +7,4 @@ class FruitBall extends Ball {
         FruitBall.list.push(this)
     }
 }
-export default FruitBall
+module.exports = FruitBall
