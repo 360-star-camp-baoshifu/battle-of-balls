@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
         let id = data.id
         let {sin,cos} = data
         let curUser = User.get(id)
-        User.ball.setDeg(sin, cos)
+        curUser.ball.setDeg(sin, cos)
         User.update()
         io.emit('FRESH', JSON.stringify(User.getAllBalls()))
     })
