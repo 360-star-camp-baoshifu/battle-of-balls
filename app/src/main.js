@@ -6,5 +6,4 @@ import bindEvents from "./scripts/events"
 
 
 bindEvents();
-showToast('玩家三加入游戏');
 
