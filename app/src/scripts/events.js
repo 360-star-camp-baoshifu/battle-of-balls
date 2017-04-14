@@ -10,8 +10,13 @@ const SCREEN_HEIGHT = window.innerHeight;
 
 const canvas_self = document.querySelector("#canvas-self");
 const canvas_balls = document.querySelector("#canvas-balls");
+const mapCanvas = document.querySelector("#canvas-bg");
+const foodCanvas = document.querySelector("#canvas-food");
+const container = document.querySelector(".container");
+
 let ctx_self = canvas_self.getContext('2d');
 let ctx_balls = canvas_balls.getContext('2d');
+let map = new Map({mapCanvas,foodCanvas,container});
 
 let user = null;
 let user_id = null;
@@ -20,12 +25,9 @@ let food = [];
 
 let socket = io("http://www.baoshifu.com");
 
-let init = false;
 let ballFlag = false;
 let foodFlag = false;
-let flags = {
-
-};
+let flags = {};
 let sendEat = throttle(()=>{
     if (ballFlag){
         socket.emit('eat-ball')
@@ -53,6 +55,15 @@ Object.defineProperty(flags,'foodFlag', {
         return foodFlag;
     }
 });
+Object.defineProperty(flags,'food', {
+    set: function (value) {
+        food = value;
+        map.render(food,user);
+    },
+    get: function () {
+        return food;
+    }
+});
 function creatItems() {
 
     // self
@@ -62,21 +73,19 @@ function creatItems() {
     canvas_balls.height = 3000;
 
     user.drawSelf(SCREEN_WIDTH,SCREEN_HEIGHT);
-    const mapCanvas = document.querySelector("#canvas-bg");
-    const foodCanvas = document.querySelector("#canvas-food");
+
     const container = document.querySelector(".container");
 
-    let map = new Map({mapCanvas,foodCanvas,container});
 
-
-    map.render(food,user);
-    (function moveFoods() {
-        requestAnimationFrame(()=>{
-            user.moveSelf(16);
-            map.foodCanvasMove(user);
-
-            moveFoods();
-        })
+    (function moveSelf() {
+        function move () {
+            requestAnimationFrame(() => {
+                user.moveSelf();
+                map.foodCanvasMove(user);
+                move();
+            })
+        }
+        move()
     })();
 
     (function moveBalls() {
@@ -99,8 +108,12 @@ function creatItems() {
 function bindEvents() {
     const cover = document.querySelector('.cover'),
         start = document.querySelector('.btn-start');
-    start.addEventListener('click',function () {
+    let init = false;
+    start.addEventListener('click',function gameStart() {
         let temp;
+        init = false;
+        user = null;
+        othersLayer.balls = [];
         document.addEventListener('mousemove',function (e) {
             // e.preventDefault();
             let x = e.pageX - SCREEN_WIDTH / 2;
@@ -114,7 +127,6 @@ function bindEvents() {
         socket.emit('init');
         socket.on('init',function (content) {
             user_id = parseInt(JSON.parse(content));
-            console.log(user_id);
         });
         socket.on('fresh',function (content) {
             temp = JSON.parse(content);
@@ -122,33 +134,39 @@ function bindEvents() {
             if (!init){
                 temp.forEach((item)=>{
                     if (item.id === user_id){
-                        user = new Ball(ctx_self,item.x,item.y,item._radius,item.speed,[item.sin,item.cos],item.id);
-                        console.log(user);
+                        user = new Ball(ctx_self,item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id);
                     } else {
-                        othersLayer.newPlayer(new Ball(ctx_balls,item.x,item.y,item._radius,item.speed,[item.sin,item.cos],item.id))
+                        othersLayer.newPlayer(new Ball(ctx_balls,item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id))
                     }
                     init = true;
-                })
+                });
+                creatItems();
+                cover.style.display = 'none';
+
             } else {
+                let isDead = true;
+
                 temp.forEach((item)=>{
                     if (item.id === user_id){
-                        user.update(item.x,item.y,item._radius,item.speed,[item.sin,item.cos],item.id);
-                        console.log('update: '+user);
+                        user.update(item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id);
+                        isDead = false;
                     } else {
-                        othersLayer.newPlayer(new Ball(ctx_balls,item.x,item.y,item._radius,item.speed,[item.sin,item.cos],item.id))
+                        othersLayer.newPlayer(new Ball(ctx_balls,item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id))
                     }
-                })
+                });
+                if (isDead){
+                    gameStart();
+                }
             }
-            creatItems();
-            cover.style.display = 'none';
         });
         socket.on('fruit-fresh',function (content) {
             food = JSON.parse(content);
+            console.log(food);
+
         });
     });
     let sendDeg = throttle(()=>{
-        console.log(user);
-        socket.emit('change-degree',JSON.stringify({"sin":user.deg[0], "cos": user.deg[1], "id": user.id}))
+        socket.emit('change-degree',JSON.stringify({"cos":user.deg[0], "sin": user.deg[1], "id": user.id}))
     },50);
 
 }

@@ -28,7 +28,7 @@ export default class OthersLayer {
             } else {
                 this.inView.delete(this.balls[key]);
             }
-            this.balls[key].move(16);
+            this.balls[key].move();
         }
         // console.log(this.inView);
     }

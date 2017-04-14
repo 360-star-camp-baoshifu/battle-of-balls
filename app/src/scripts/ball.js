@@ -7,6 +7,7 @@ export default class Ball {
         this.id = id;
         this.color = this.randomColor();
         this.v = v;
+        this.lastTimeStamp = Date.now()
         let _deg = deg;
         Object.defineProperty(this,'deg',{
             set: function (value) {
@@ -40,24 +41,30 @@ export default class Ball {
         this.ctx.closePath();
     }
 
-    move (interval) {
+    move () {
+        let now = Date.now()
+        let timeSpan = now - this.lastTimeStamp
         // let [vx, vy] = [this.v * Math.cos(this.deg), this.v * Math.sin(this.deg)];
         let [vx, vy] = [this.v * this.deg[0], this.v * this.deg[1]];
-        let [newx, newy] = [this.x + vx * interval/1000, this.y + vy * interval/1000];
+        let [newx, newy] = [this.x + vx * timeSpan/1000, this.y + vy * timeSpan/1000];
         //边界判断
         this.x = (0 < newx - this.r && 3000 > newx + this.r) ? newx : this.x;
         this.y = (0 < newy - this.r && 3000 > newy + this.r) ? newy : this.y;
         this.drawCircle();
+        this.lastTimeStamp = now
     }
 
     moveSelf (interval) {
         // let [vx, vy] = [this.v * Math.cos(this.deg), this.v * Math.sin(this.deg)];
+        let now = Date.now()
+        let timeSpan = now - this.lastTimeStamp
         let [vx, vy] = [this.v * this.deg[0], this.v * this.deg[1]];
-        let [newx, newy] = [this.x + vx * interval/1000, this.y + vy * interval/1000];
+        let [newx, newy] = [this.x + vx * timeSpan/1000, this.y + vy * timeSpan/1000];
         //边界判断
         this.x = (0 < newx - this.r && 3000 > newx + this.r) ? newx : this.x;
         this.y = (0 < newy - this.r && 3000 > newy + this.r) ? newy : this.y;
-        console.log('move: '+ this.x + ' , ' +this.y);
+        this.lastTimeStamp = now
+
     }
 
     update (x, y, r, v, deg, id) {
