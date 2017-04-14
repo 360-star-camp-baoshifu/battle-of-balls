@@ -13,26 +13,42 @@ app.use(async (ctx, next)=> {
 const server = http.createServer(app.callback())
 const io = require('socket.io')(server)
 
+import User from './model/User'
+import UserBall from './model/user-ball'
+import FruitBall from './model/fruit-ball'
+
+const FRUIT_NUM = 20;
+
 io.on('connection', (socket) => {
-    console.log('新连接')
+    if (User.num() === 0) {
+        User._list = []
+        UserBall._list = []
+        FruitBall._list = []
+        for (let i = 0; i < FRUIT_NUM; i++) {
+            new FruitBall()
+        }
+    }
+
     let user = new User(socket);
+    socket.emit('init', user.id)
+    io.emit('new-user', JSON.stringify(User.getAllBalls()));
 
-    const fruitNum = User.num() === 1 ? 20 : 5;
-
-
-    io.emit('connected', User.getAllBalls());
-
-    socket.on('move', (data) => {
-    
+    socket.on('change-degree', (data) => {
+        let data = JSON.parse(data)
+        let id = data.id
     })
 
-    socket.on('eatFood', data => {
+    socket.on('eat-food', data => {
 
     })
 
-    socket.on('eatBall', data => {
+    socket.on('eat-ball', data => {
 
     })
+})
+io.on('disconnect', (socket) => {
+    let disconUser = User._list.find(user => user.socket === socket)
+
 })
 
 server.listen(3000, async () => {

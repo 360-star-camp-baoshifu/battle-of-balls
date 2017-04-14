@@ -1,4 +1,4 @@
-const Ball = require('./Ball');
+import UserBall from './user-ball'
 
 let guid = 0;
 
@@ -6,7 +6,7 @@ class User {
   constructor(socket) {
     this.id = guid++;
     this.socket = socket;
-    this.ball = new Ball(this.id);
+    this.ball = new UserBall(this.id);
     this.constructor._list.push(this);
   }
 
@@ -26,7 +26,7 @@ User.num = function () {
 };
 
 User.get = function (id) {
-  return this._list.fliter(user => user.id === id)[0]; 
+  return this._list.find(user => user.id === id);
 };
 
 User.getAllBalls = function () {
@@ -36,3 +36,5 @@ User.getAllBalls = function () {
 User.update = function () {
   this._list.forEach(user => user.ball._update());
 };
+
+export default User
