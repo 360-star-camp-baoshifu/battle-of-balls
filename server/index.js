@@ -20,6 +20,7 @@ const FRUIT_NUM = 20
 global.id = 0
 
 io.on('connection', (socket) => {
+    console.log('new user')
     if (User.num() === 0) {
         User.list = []
         UserBall.list.length = 0
@@ -31,8 +32,10 @@ io.on('connection', (socket) => {
 
     let user = new User(socket)
     socket.on('init', () => {
+        console.log('init')
         let user = new User(global.id++)
         socket.emit('init', user.id)
+        console.log(JSON.stringify(User.getAllBalls()))
         io.emit('fresh', JSON.stringify(User.getAllBalls()))
         io.emit('fruit-fresh', JSON.stringify(FruitBall.list))
     })
@@ -65,22 +68,25 @@ io.on('connection', (socket) => {
         User.removeArrById(re.eatBalls.map(ball => ball.id));
     	io.emit('fresh', JSON.stringify(User.getAllBalls()))
     })
-})
-io.on('disconnect', (socket) => {
-    let index = 0;
-    let disconnectUser
-    for (let i = 0 ; i < User.list.length; i++) {
-        if (socket === User.socket) {
-            index = i
-            disconnectUser = User[i]
+    socket.on('disconnect', (socket) => {
+        console.log('disconnect')
+        let index = 0;
+        let disconnectUser
+        for (let i = 0 ; i < User.list.length; i++) {
+            if (socket === User.socket) {
+                index = i
+                disconnectUser = User[i]
+            }
         }
-    }
-    if (!disconnectUser) {
-        return
-    }
-    User.list.splice(index, 1)
-    io.emit('fresh', JSON.stringify(User.getAllBalls()))
+        if (!disconnectUser) {
+            return
+        }
+        console.log(User.list)
+        User.list.splice(index, 1)
+        io.emit('fresh', JSON.stringify(User.getAllBalls()))
+    })
 })
+
 
 server.listen(3000, async () => {
     console.log('server is running on port 3000')
