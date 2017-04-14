@@ -7,5 +7,11 @@ class FruitBall extends Ball {
 }
 FruitBall.INIT_RADIUS = 10
 FruitBall.list = []
-
+FruitBall.remove = function (fruit) {
+    let index = FruitBall.indexOf(fruit)
+    if (!~index) {
+        return
+    }
+    FruitBall.list.splice(index, 1)
+}
 module.exports = FruitBall
