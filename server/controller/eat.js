@@ -1,8 +1,8 @@
 function eatBalls () {
-	eat();
+	return eat();
 }
 function eatFood () {
-	eat(0);
+	return eat(0);
 }
 function eat (diff) {
 	let balls = User.getAllBalls(),
@@ -10,6 +10,7 @@ function eat (diff) {
 	for(let ballWrapper of judgeResult.eatBalls){
 		ballWrapper.ball.grow(ballWrapper.r)
 	}
+	return judgeResult;
 }
 module.exports = {
 	eatBalls,

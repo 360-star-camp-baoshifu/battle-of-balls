@@ -41,12 +41,16 @@ io.on('connection', (socket) => {
     socket.on('eat-food', data => {
     	User.update();
     	eatFood();
+    	let newFood = new FruitBall();
+    	newFood._generate();
+    	FruitBall._list.push(newFood);
     	io.emit('FRESH',JSON.stringify(User.getAllBalls()));
     })
 
     socket.on('eat-ball', data => {
     	user.update();
-    	eatBalls();
+    	let re = eatBalls();
+    	
     	io.emit('FRESH',JSON.stringify(User.getAllBalls()));
     })
 })
