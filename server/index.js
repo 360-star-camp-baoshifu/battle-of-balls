@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
     socket.on('init', () => {
         let user = new User(global.id++)
         socket.emit('init', user.id)
-        io.emit('new-user', JSON.stringify(User.getAllBalls()))
+        io.emit('fresh', JSON.stringify(User.getAllBalls()))
         io.emit('fruit-fresh', JSON.stringify(FruitBall.list))
     })
 
@@ -56,7 +56,8 @@ io.on('connection', (socket) => {
         for(let i = 0;i < eatedLen; i++){
             new FruitBall(global.id++);
         }
-    	io.emit('fruit-fresh',JSON.stringify(FruitBall.list));
+    	io.emit('fruit-fresh',JSON.stringify(FruitBall.list))
+        io.emit('fresh',JSON.stringify(User.getAllBalls()))
     })
     socket.on('eat-ball', data => {
     	User.update();
@@ -78,7 +79,7 @@ io.on('disconnect', (socket) => {
         return
     }
     User.list.splice(index, 1)
-    io.emit('user-position', JSON.stringify(User.getAllBalls()))
+    io.emit('fresh', JSON.stringify(User.getAllBalls()))
 })
 
 server.listen(3000, async () => {
