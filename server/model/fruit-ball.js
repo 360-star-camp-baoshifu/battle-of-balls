@@ -7,8 +7,13 @@ class FruitBall extends Ball {
 }
 FruitBall.INIT_RADIUS = 10
 FruitBall.list = []
+FruitBall.removeArr = function (fruitArr) {
+    FruitBall.list = FruitBall.list.filter(fruit => {
+        return  !~fruitArr.indexOf(fruit)
+    })
+}
 FruitBall.remove = function (fruit) {
-    let index = FruitBall.indexOf(fruit)
+    let index = FruitBall.list.indexOf(fruit)
     if (!~index) {
         return
     }

@@ -17,19 +17,24 @@ const UserBall =  require('./model/user-ball')
 const FruitBall = require('./model/fruit-ball')
 const { eatFood, eatBalls } = require('./controller/eat')
 const FRUIT_NUM = 20
+global.id = 0
 
 io.on('connection', (socket) => {
     if (User.num() === 0) {
-        User._list = []
-        UserBall._list = []
-        FruitBall._list = []
+        User.list = []
+        UserBall.list = []
+        FruitBall.list = []
         for (let i = 0; i < FRUIT_NUM; i++) {
-            new FruitBall()
+            new FruitBall(global.id++)
         }
     }
 
     let user = new User(socket)
-    socket.emit('init', user.id)
+    socket.on('init', () => {
+        let user = new User(global.id++)
+        socket.emit('init', user.id)
+    })
+
     io.emit('new-user', JSON.stringify(User.getAllBalls()))
     socket.on('change-degree', (dataRaw) => {
         let data = JSON.parse(dataRaw)
@@ -41,16 +46,16 @@ io.on('connection', (socket) => {
         io.emit('FRESH', JSON.stringify(User.getAllBalls()))
     })
 
-    socket.on('eat-food', data => {
+    socket.on('eat-food', () => {
     	User.update();
-    	let re = eatFood(FruitBall._list);
-    	let newFood = new FruitBall();
+    	let re = eatFood(FruitBall.list);
+    	let newFood = new FruitBall(global.id++);
     	newFood._generate();
-    	FruitBall._list.push(newFood);
+    	FruitBall.list.push(newFood);
     	io.emit('FRESH',JSON.stringify(User.getAllBalls()));
     })
 
-    socket.on('eat-ball', data => {
+    socket.on('eat-ball', () => {
     	User.update()
     	eatBalls(User.getAllBalls())
     	io.emit('FRESH', JSON.stringify(User.getAllBalls()))
@@ -59,7 +64,7 @@ io.on('connection', (socket) => {
 io.on('disconnect', (socket) => {
     let index = 0;
     let disconnectUser
-    for (let i = 0 ; i < User._list.length; i++) {
+    for (let i = 0 ; i < User.list.length; i++) {
         if (socket === User.socket) {
             index = i
             disconnectUser = User[i]
@@ -68,8 +73,8 @@ io.on('disconnect', (socket) => {
     if (!disconnectUser) {
         return
     }
-    User._list.splice(index, 1)
-    if (User._list.length === 0) {
+    User.list.splice(index, 1)
+    if (User.list.length === 0) {
         FruitBall.list.length = 0
         UserBall.list = 0
     }
