@@ -1,5 +1,6 @@
 const Ball = require('./ball')
 const TOTAL_WIDTH = 3000
+const debug = require('debug')('baoshifu')
 class UserBall extends Ball{
     constructor (id) {
         super(id, UserBall.INIT_RADIUS)
@@ -15,7 +16,8 @@ class UserBall extends Ball{
             return
         }
         let nowTimeStamp = Date.now()
-        let path = (nowTimeStamp - this._lastTimeStamp) * this.speed
+        debug(nowTimeStamp - this._lastTimeStamp)
+        let path = (nowTimeStamp - this._lastTimeStamp) / 1000 * this.speed
         this.x += path * this.cos
         this.x = Math.max(0 + this.radius, Math.min(this.x, TOTAL_WIDTH - this.radius))
         this.y += path * this.sin

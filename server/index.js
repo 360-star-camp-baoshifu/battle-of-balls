@@ -2,6 +2,7 @@ const http = require('http')
 const Koa = require('koa')
 const app = new Koa()
 const cors = require('kcors')
+const debug = require('debug')('baoshifu')
 
 app.use(cors({
     maxAge: 7 * 24 * 60 * 60
@@ -20,7 +21,7 @@ const FRUIT_NUM = 20
 global.id = 0
 
 io.on('connection', (socket) => {
-    console.log('new user')
+    debug('connection')
     if (User.num() === 0) {
         User.list = []
         UserBall.list.length = 0
@@ -30,12 +31,10 @@ io.on('connection', (socket) => {
         }
     }
 
-    let user = new User(socket)
     socket.on('init', () => {
-        console.log('init')
-        let user = new User(global.id++)
+        debug('init')
+        let user = new User(socket)
         socket.emit('init', user.id)
-        console.log(JSON.stringify(User.getAllBalls()))
         io.emit('fresh', JSON.stringify(User.getAllBalls()))
         io.emit('fruit-fresh', JSON.stringify(FruitBall.list))
     })
@@ -48,6 +47,7 @@ io.on('connection', (socket) => {
         let curUser = User.get(id)
         curUser.ball.setDeg(sin, cos)
         User.update()
+        debug(User.list)
         io.emit('fresh', JSON.stringify(User.getAllBalls()))
     })
 
@@ -69,7 +69,8 @@ io.on('connection', (socket) => {
     	io.emit('fresh', JSON.stringify(User.getAllBalls()))
     })
     socket.on('disconnect', (socket) => {
-        console.log('disconnect')
+        debug('disconnect')
+        debug(User.list)
         let index = 0;
         let disconnectUser
         for (let i = 0 ; i < User.list.length; i++) {
@@ -81,7 +82,7 @@ io.on('connection', (socket) => {
         if (!disconnectUser) {
             return
         }
-        console.log(User.list)
+
         User.list.splice(index, 1)
         io.emit('fresh', JSON.stringify(User.getAllBalls()))
     })
@@ -89,5 +90,5 @@ io.on('connection', (socket) => {
 
 
 server.listen(3000, async () => {
-    console.log('server is running on port 3000')
+    debug('server is running on port 3000')
 })
