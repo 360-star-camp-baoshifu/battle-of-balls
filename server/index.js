@@ -66,6 +66,10 @@ io.on('disconnect', (socket) => {
         return
     }
     User._list.splice(index, 1)
+    if (User._list.length === 0) {
+        FruitBall.list.length = 0
+        UserBall.list = 0
+    }
     io.emit('user-position', JSON.stringify(User.getAllBalls()))
 })
 
