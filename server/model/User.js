@@ -34,19 +34,19 @@ User.removeArrById = function (ids) {
 }
 
 User.num = function () {
-  return this.list.length;
+  return User.list.length;
 };
 
 User.get = function (id) {
-  return this.list.find(user => user.id === id);
+  return User.list.find(user => user.id === id);
 };
 
 User.getAllBalls = function () {
-  return this.list.map(user => user.ball);
+  return User.list.map(user => user.ball);
 };
 
 User.update = function () {
-  this.list.forEach(user => user.ball._update());
+    User.list.forEach(user => user.ball._update());
 };
 
 module.exports = User

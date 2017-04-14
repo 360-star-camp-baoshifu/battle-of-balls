@@ -35,24 +35,25 @@ io.on('connection', (socket) => {
         debug('init')
         let user = new User(socket)
         socket.emit('init', user.id)
+        User.update()
         io.emit('fresh', JSON.stringify(User.getAllBalls()))
         io.emit('fruit-fresh', JSON.stringify(FruitBall.list))
     })
 
 
     socket.on('change-degree', (dataRaw) => {
+        debug('degree')
+        User.update()
         let data = JSON.parse(dataRaw)
         let id = data.id
         let {sin,cos} = data
         let curUser = User.get(id)
         curUser.ball.setDeg(sin, cos)
-        User.update()
-        debug(User.list)
         io.emit('fresh', JSON.stringify(User.getAllBalls()))
     })
 
     socket.on('eat-food', () => {
-    	User.update();
+        User.update()
     	let re = eatFood(FruitBall.list, UserBall.list),
             eatedLen = re.eatBalls.length;
         FruitBall.removeArr(re.eatBalls);
@@ -63,7 +64,7 @@ io.on('connection', (socket) => {
         io.emit('fresh',JSON.stringify(User.getAllBalls()))
     })
     socket.on('eat-ball', data => {
-    	User.update();
+        User.update()
     	let re = eatBalls(User.getAllBalls());
         User.removeArrById(re.eatBalls.map(ball => ball.id));
     	io.emit('fresh', JSON.stringify(User.getAllBalls()))
