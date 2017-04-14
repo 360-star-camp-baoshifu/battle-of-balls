@@ -52,6 +52,13 @@ class UserBall extends Ball{
         this.radius = Math.sqrt(Math.pow(this.radius, 2) + Math.pow(radius, 2))
     }
 }
+UserBall.remove = function (ball) {
+    let index = UserBall.list.indexOf(ball)
+    if (!~index) {
+        return
+    }
+    UserBall.list.splice(index, 1)
+}
 UserBall.RADIUS_MULTI_SPEED = 3000
 UserBall.INIT_RADIUS = 30
 UserBall.MIN_TIME_CALC_SPAN = 5
