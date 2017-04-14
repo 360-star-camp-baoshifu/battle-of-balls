@@ -24,13 +24,13 @@ function judegBall(ball,balls){
 		eatBalls:Array.from(eatBalls)
 	}
 }
-function judgeAll(balls){
+function judgeAll(balls,diff){
 	let surviveBalls = [],
 		deadBalls = new Set(),
 		eatBalls = new Set();
 	for(var i = 0;i < balls.length;i++){
 		for(var j = i + 1;j < balls.length;j++){
-			var re = judge(balls[i],balls[j]);
+			var re = judge(balls[i],balls[j],diff);
 			if(re){
 				deadBalls.add(re[1]);
 				eatBalls.add({ball:re[0],r:re[1].radius});
@@ -52,11 +52,10 @@ function judgeAll(balls){
 		eatBalls:Array.from(eatBalls)
 	}
 }
-function judge(ball1,ball2){
+function judge(ball1,ball2,diff = Math.min(ball1.r,ball2.r) ){
 	if(ball1 === ball2) return null;
 	let dis = Math.sqrt(Math.pow((ball1.x - ball2.x),2) + Math.pow((ball1.y - ball2.y),2)),
-		sumR = ball1.r + ball2.r,
-		diff = Math.min(ball1.r,ball2.r);
+		sumR = ball1.r + ball2.r;
 	if(sumR - dis > diff) return ball1.r > ball2.r ? [ball2,ball1] : [ball1,ball2];
 	return null;
 }
