@@ -57,6 +57,7 @@ export default class Ball {
         //边界判断
         this.x = (0 < newx - this.r && 3000 > newx + this.r) ? newx : this.x;
         this.y = (0 < newy - this.r && 3000 > newy + this.r) ? newy : this.y;
+        console.log('move: '+ this.x + ' , ' +this.y);
     }
 
     update (x, y, r, v, deg, id) {

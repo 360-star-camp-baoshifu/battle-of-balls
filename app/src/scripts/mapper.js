@@ -48,9 +48,9 @@ export default class Mapper{
             mapCxt.closePath();
         }
 
-        foods.map((d, i) => {
-            let {_x, _y, _r, _color} = d;
-            drawFoods(foodCxt, _color, _x, _y, _r);
+        foods.map((d) => {
+            let {x, y, _radius} = d;
+            drawFoods(foodCxt, '#6cf', x, y, _radius);
         });
 
         // transform: 'translate('+ defaultOptions.SCREEN_WIDTH / 2 - user.x + 289 + ','+ defaultOptions.SCREEN_HEIGHT / 2 - user.y - 289 +')'

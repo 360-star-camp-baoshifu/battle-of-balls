@@ -6,5 +6,4 @@ import bindEvents from "./scripts/events"
 
 
 bindEvents();
-showToast('您加入了游戏');
 

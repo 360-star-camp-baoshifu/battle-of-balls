@@ -20,7 +20,8 @@
     "kcors": "^1.3.2",
     "koa": "^2.2.0",
     "lodash.throttle": "^4.1.1",
-    "socket.io": "^1.7.3"
+    "socket.io": "^1.7.3",
+    "socket.io-client": "^1.7.3"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
