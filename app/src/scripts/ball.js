@@ -1,39 +1,61 @@
 export default class Ball {
-    constructor (x,y,r,v,deg,isSelf) {
+    constructor (ctx,x,y,r,v,deg) {
+        this.ctx = ctx;
         this.x = x;
         this.y = y;
         this.r = r;
-        this.isSelf = isSelf;
         this.color = this.randomColor();
         this.v = v;
-        this.deg = deg;
+        let _deg = deg;
+        Object.defineProperty(this,'deg',{
+            set: function (value) {
+                _deg = value;
+            },
+            get: function () {
+                return _deg;
+            }
+        });
     }
 
     randomColor () {
-        let colors = ['#f33', '#6cf', '#a1a1a1', '#c69', '#333', '#96c'];
+        let colors = ['red', 'blue', 'brown', 'green', 'black', 'orange'];
         return colors[Math.floor(Math.random() * (colors.length - 1))];
     }
 
-    drawCircle (ctx,x,y) {
-        console.log(this.color)
-        ctx.beginPath();
-        ctx.fillStyle = this.color;
-        if(this.isSelf){
-            ctx.arc(x, y, this.r, 0, 2 * Math.PI);
-        } else {
-            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
-        }
-        ctx.closePath();
-        ctx.fill();
+    drawCircle () {
+        this.ctx.fillStyle = this.color;
+        this.ctx.beginPath();
+        this.ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+
+    drawSelf (width, heigth) {
+        this.ctx.fillStyle = this.color;
+        this.ctx.beginPath();
+        this.ctx.arc(width / 2, heigth / 2, this.r, 0, 2 * Math.PI);
+        this.ctx.fill();
+        this.ctx.closePath();
     }
 
     move (interval) {
-        let [vx, vy] = [this.v * Math.cos(this.deg), this.v * Math.sin(this.deg)];
-        let [newx, newy] = [this.x + vx * interval, this.y + vy * interval];
+        // let [vx, vy] = [this.v * Math.cos(this.deg), this.v * Math.sin(this.deg)];
+        let [vx, vy] = [this.v * this.deg[0], this.v * this.deg[1]];
+        let [newx, newy] = [this.x + vx * interval/1000, this.y + vy * interval/1000];
         //边界判断
         this.x = (0 < newx - this.r && 3000 > newx + this.r) ? newx : this.x;
         this.y = (0 < newy - this.r && 3000 > newy + this.r) ? newy : this.y;
         this.drawCircle();
+    }
+
+    moveSelf (interval) {
+        // let [vx, vy] = [this.v * Math.cos(this.deg), this.v * Math.sin(this.deg)];
+        let [vx, vy] = [this.v * this.deg[0], this.v * this.deg[1]];
+        let [newx, newy] = [this.x + vx * interval/1000, this.y + vy * interval/1000];
+        //边界判断
+        this.x = (0 < newx - this.r && 3000 > newx + this.r) ? newx : this.x;
+        this.y = (0 < newy - this.r && 3000 > newy + this.r) ? newy : this.y;
+        // console.log(this.x,this.y)
     }
 
     update (x, y, r, v, deg) {
@@ -44,13 +66,13 @@ export default class Ball {
         this.deg = deg;
     }
 
-    isInViewPort (ctx, viewx, viewy, viewwidth, viewheigth) {
+    isInViewPort (viewx, viewy, viewwidth, viewheigth) {
         let vertexs = new Array(4).fill().map((_, i) => [viewx + viewwidth * (i % 2), viewy + viewheigth * Math.floor(i / 2)]);
         for (let key in vertexs) {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.R, 0, 2*Math.PI);
-            ctx.closePath();
-            if (ctx.ctx.isPointInPath(vertexs[key][0], vertexs[key][0])) {
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+            this.ctx.closePath();
+            if (this.ctx.isPointInPath(vertexs[key][0], vertexs[key][0])) {
                 return true;
             }
         }
@@ -60,9 +82,9 @@ export default class Ball {
         return false;
     }
 
-    eat (otherball) {
+    touchStart (otherball) {
         let distance = Math.sqrt(Math.pow(otherball.x - this.x, 2) + Math.pow(otherball.y - this.y, 2))
-        if (distance < (otherball.r + this.r)/5) {
+        if (distance < (otherball.r + this.r)) {
             return true;
         } else {
             return false;

@@ -1,5 +1,7 @@
 body{
   font-family: "Wawati SC" ,sans-serif;
+  overflow: hidden;
+
 }
 .cover{
   position: absolute;
@@ -26,10 +28,11 @@ body{
   }
 }
 .container{
-  width: 100vw;
-  height: 100vh;
-  background: #FFCCCC;
+  //width: 100vw;
+  //height: 100vh;
+  background: #FFFAD8;
   text-align: center;
+  position: relative;
 }
 .toast{
   position: fixed;
