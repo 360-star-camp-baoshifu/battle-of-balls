@@ -17,6 +17,7 @@ const container = document.querySelector(".container");
 
 let ctx_self = canvas_self.getContext('2d');
 let ctx_balls = canvas_balls.getContext('2d');
+window.ctx_balls = ctx_balls;
 let map = new Mapper({mapCanvas,foodCanvas,container});
 
 let user = null;
@@ -25,9 +26,11 @@ let othersLayer = new OthersLayer();
 let food = [];
 let colors = new Map();
 
+let random = function(m, n) {
+    return Math.round(Math.random() * (n - m) + m);
+};
 function randomColor () {
-    let colors = ['red', 'blue', 'brown', 'green', 'black', 'orange'];
-    return colors[Math.floor(Math.random() * (colors.length - 1))];
+    return "rgb(" + random(102, 255) + "," + random(102, 255) + "," + random(102, 255) + ")";
 }
 
 let socket = io("http://www.baoshifu.com");
@@ -89,12 +92,13 @@ function creatItems() {
         move()
     })();
 
+
     (function moveBalls() {
         requestAnimationFrame(()=>{
-
+            // ctx_balls.clearRect(user.x-SCREEN_WIDTH/2,user.y-SCREEN_HEIGHT/2,user.x+SCREEN_WIDTH/2,user.y+SCREEN_HEIGHT/2);
             othersLayer.drawBallsorNot(user.x-SCREEN_WIDTH/2,user.y-SCREEN_HEIGHT/2,SCREEN_WIDTH,SCREEN_HEIGHT);
             if (othersLayer.inView.size) {
-                ctx_balls.clearRect(0,0,3000,3000);
+                console.log('inView');
                 flags.ballFlag = othersLayer.drawBalls(user)?true:flags.ballFlag;//返回有无和其他玩家碰撞
             }
             moveBalls();
@@ -141,6 +145,7 @@ function bindEvents() {
                 temp.forEach((item)=>{
                     if (item.id === user_id){
                         user = new Ball(ctx_self,item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id);
+                        othersLayer.user = user;
                     } else {
                         if (typeof colors[item.id] === 'undefined'){
                             colors[item.id] = randomColor();
@@ -157,6 +162,7 @@ function bindEvents() {
                 temp.forEach((item)=>{
                     if (item.id === user_id){
                         user.update(item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id);
+                        othersLayer.user.update(item.x,item.y,item._radius,item.speed,[item.cos,item.sin],item.id);
                         isDead = false;
                     } else {
                         if (typeof colors[item.id] === 'undefined'){

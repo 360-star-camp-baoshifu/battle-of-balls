@@ -22,35 +22,39 @@ export default class Ball {
         });
     }
 
-
-
-    drawCircle () {
+    drawCircle (user) {
         // this.ctx
+        // this.ctx.clearRect(0,0,3000,3000)
+        if (typeof user !== 'undefined')
+            ctx_balls.clearRect(user.x-SCREEN_WIDTH/2,user.y-SCREEN_HEIGHT/2,user.x+SCREEN_WIDTH/2,user.y+SCREEN_HEIGHT/2);
+        // this.ctx.canvas.width = this.ctx.canvas.width;
         this.ctx.fillStyle = this.color;
         this.ctx.beginPath();
         this.ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
-        this.ctx.fill();
         this.ctx.closePath();
+        this.ctx.fill();
     }
 
-    drawSelf (width, heigth) {
+    drawSelf (width, height) {
+        // this.ctx.clearRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
         this.ctx.fillStyle = this.color;
         this.ctx.beginPath();
-        this.ctx.arc(width / 2, heigth / 2, this.r, 0, 2 * Math.PI);
-        this.ctx.fill();
+        this.ctx.arc(width / 2, height / 2, this.r, 0, 2 * Math.PI);
         this.ctx.closePath();
+        this.ctx.fill();
     }
 
     move () {
-        let now = Date.now()
-        let timeSpan = now - this.lastTimeStamp
+        // this.ctx.clearRect(0,0,3000,3000);
+        let now = Date.now();
+        let timeSpan = now - this.lastTimeStamp;
         // let [vx, vy] = [this.v * Math.cos(this.deg), this.v * Math.sin(this.deg)];
         let [vx, vy] = [this.v * this.deg[0], this.v * this.deg[1]];
         let [newx, newy] = [this.x + vx * timeSpan/1000, this.y + vy * timeSpan/1000];
         //边界判断
         this.x = (0 < newx - this.r && 3000 > newx + this.r) ? newx : this.x;
         this.y = (0 < newy - this.r && 3000 > newy + this.r) ? newy : this.y;
-        this.drawCircle();
+        // this.drawCircle();
         this.lastTimeStamp = now
     }
 
@@ -73,7 +77,6 @@ export default class Ball {
         if (this.r !== r){
             this.r = r;
             this.drawSelf(SCREEN_WIDTH,SCREEN_HEIGHT);
-
         }
         this.v = v;
         this.deg = deg;
@@ -83,9 +86,9 @@ export default class Ball {
     isInViewPort (viewx, viewy, viewwidth, viewheigth) {
         let vertexes = new Array(4).fill().map((_, i) => [viewx-100 + (viewwidth+100) * (i % 2), viewy-100 + (viewheigth+100) * Math.floor(i / 2)]);
         for (let key in vertexes) {
-            // this.ctx.beginPath();
-            // this.ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI);
-            // this.ctx.closePath();
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+            this.ctx.closePath();
             if (this.ctx.isPointInPath(vertexes[key][0], vertexes[key][0])) {
                 return true;
             }
