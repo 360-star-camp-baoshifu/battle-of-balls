@@ -10,7 +10,7 @@ export default class Ball {
         this.id = id;
         this.color = color;
         this.v = v;
-        this.lastTimeStamp = Date.now()
+        this.lastTimeStamp = Date.now();
         let _deg = deg;
         Object.defineProperty(this,'deg',{
             set: function (value) {
